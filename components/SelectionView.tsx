@@ -22,9 +22,8 @@ const restoreSelection = (state: SelectionItem) => {
     setGeneratedItems([]);
     setRestorePlot(true);
 
-    if (dataValue && dataValue !== "") {
-        let obj = JSON.parse(dataValue);
-        let ids = obj.map((item: any) => { return item.id });
+    if (dataValue) {
+        let ids = dataValue.map((item: any) => { return item.id });
         addSelectedIds(ids);
     } else {
         addSelectedIds([]);
@@ -35,7 +34,7 @@ const deleteSelection = (name: number) => {
     deleteSelectedItem(name);
 }
 
-const SelectionView = ({ item = { count: 0, data: "", seed: "", timestamp: Date.now() } }: SelectionItemProps) => {
+const SelectionView = ({ item = { count: 0, data: [], seed: "", timestamp: Date.now() } }: SelectionItemProps) => {
     let name = item.timestamp;
     const currentSelectionItem = createStore(item, { name: name.toString() });
     const itemCount = createStore(item.count, { name: name.toString() });

@@ -1,16 +1,17 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { ApiResponse } from '../../model/ApiResponse';
+import { ApiResponse } from '../../model/apiResponse';
+import { SelectionItem } from '../../model/selectionItem';
 
 export const uploadFileRequest = async (
-  formData: FormData,
+  data: SelectionItem,
   progressCallback?: (progressEvent: ProgressEvent) => void
 ): Promise<ApiResponse<string[]>> => {
   const config: AxiosRequestConfig = {
-    headers: { 'content-type': 'multipart/form-data' },
+    headers: { 'content-type': 'application/json' },
     onUploadProgress: progressCallback,
     validateStatus: (status) => true,
   };
-  const response = await axios.post('api/uploads', formData, config);
+  const response = await axios.post('api/uploads', JSON.stringify(data) , config);
 
   return response.data;
 };

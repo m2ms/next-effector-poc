@@ -6,6 +6,7 @@ import { useStore } from "effector-react";
 import { currentGeneratedItems, seed, xaxisName, yaxisName, count, selectedIds, savedSelectedItems } from '../state/store';
 import { saveSelectedItem, } from '../state/event';
 import { SelectionItem } from '../model/selectionItem';
+import { uploadFileRequest } from '../domains/upload/upload.services';
 
 const Selection: React.FC = (props) => {
     const currentSeed = useStore(seed);
@@ -23,8 +24,11 @@ const Selection: React.FC = (props) => {
         });
 
         let timestamp = Date.now();
-        let selectionItem: SelectionItem = { timestamp: timestamp, seed: currentSeed, count: countValue, data: JSON.stringify(newItemsToSave) };
+        let selectionItem: SelectionItem = { timestamp: timestamp, seed: currentSeed, count: countValue, data: newItemsToSave };
         saveSelectedItem(selectionItem);
+
+        const response = await uploadFileRequest(selectionItem);
+        console.log(response);
     }
 
     return (

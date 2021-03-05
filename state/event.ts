@@ -1,5 +1,5 @@
 import { createEvent } from "effector";
-import { SelectionItem } from "./../model/selectionItem";
+import { SelectionItem } from "../model/selectionItem";
 import { GeneratedItem } from "../model/item";
 
 export const addGeneratedItems = createEvent<GeneratedItem[]>();

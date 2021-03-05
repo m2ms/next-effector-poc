@@ -1,5 +1,5 @@
 import { GeneratedItem } from "../model/item";
-import { SelectionItem } from "./../model/selectionItem";
+import { SelectionItem } from "../model/selectionItem";
 import { saveSelectedItem, addSelectedIds, addGeneratedItems, setGeneratedItems, increment, saveSeed,saveCount,deleteSelectedItem, reset,setCUrrentSelectedItem, setRestorePlot} from './event';
 import { savedSelectedItems,selectedIds, currentGeneratedItems, fromCount, allGeneratedItems, seed, count, currentSelectionItem, restorePlot } from "./store";
 

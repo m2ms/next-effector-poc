@@ -19,7 +19,6 @@
     "effector": "^21.8.4",
     "effector-react": "^21.2.1",
     "keycloak-js": "^11.0.2",
-    "multer": "^1.4.2",
     "next": "latest",
     "next-connect": "^0.10.0",
     "plotly.js": "^1.58.4",

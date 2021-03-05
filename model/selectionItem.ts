@@ -1,6 +1,6 @@
 export interface SelectionItem {
   seed: string,
   timestamp: number,
-  data: string; 
+  data: any[]; 
   count: number,
 }
