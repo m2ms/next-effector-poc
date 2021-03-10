@@ -1,5 +1,6 @@
 import { useKeycloak } from '@react-keycloak/ssr'
 import type { KeycloakInstance, KeycloakTokenParsed } from 'keycloak-js'
+
 import { Layout } from '../components/Layout'
 
 type ParsedToken = KeycloakTokenParsed & {
@@ -10,11 +11,15 @@ type ParsedToken = KeycloakTokenParsed & {
   given_name?: string
 
   family_name?: string
+
 }
 
 const IndexPage = () => {
   const { keycloak } = useKeycloak<KeycloakInstance>()
   const parsedToken: ParsedToken | undefined = keycloak?.tokenParsed
+
+  console.log("parsedToken");
+  console.log(keycloak);
 
   const loggedinState = keycloak?.authenticated ? (
     <span className="text-success">logged in</span>
@@ -28,14 +33,14 @@ const IndexPage = () => {
       : 'Welcome visitor. Please login to continue.'
 
   return (
-    <Layout title="Home | Next.js PoC">
-      <div className="container my-5"> <h1 className="mt-5">Hello Next.js PoC + Keycloak 👋</h1>
-        <div className="mb-5 lead text-muted">
-          This is an example of a Next.js site using Keycloak.
+    <Layout title="Home | Next.js + TypeScript Example">
+      <h1 className="mt-5">Hello Next.js + Keycloak 👋</h1>
+      <div className="mb-5 lead text-muted">
+        This is an example of a Next.js site using Keycloak.
       </div>
-        <p>You are: {loggedinState}</p>
-        <p>{welcomeMessage}</p>
-      </div>
+
+      <p>You are: {loggedinState}</p>
+      <p>{welcomeMessage}</p>
     </Layout>
   )
 }

@@ -24,7 +24,7 @@ export const Layout: React.FC<Props> = ({
     </Head>
 
     <Header />
-    <div className="container-fluid my-5">{children}</div>
+    <div className="container my-5">{children}</div>
     <Footer />
   </div>
 )
