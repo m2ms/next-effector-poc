@@ -1,6 +1,14 @@
 import { useKeycloak } from '@react-keycloak/ssr'
 import type { KeycloakInstance, KeycloakTokenParsed } from 'keycloak-js'
 import { Layout } from '../components/Layout'
+import React from "react";
+import Link from "next/link";
+import { useStore } from "effector-react";
+import { withStart } from "effector-next";
+import { pageLoaded } from "../models";
+import { $currentSelectionItem } from "../models/store";
+
+const enhance = withStart(pageLoaded);
 
 type ParsedToken = KeycloakTokenParsed & {
   email?: string
@@ -12,7 +20,9 @@ type ParsedToken = KeycloakTokenParsed & {
   family_name?: string
 }
 
-const IndexPage = () => {
+function IndexPage() {
+  const data = useStore($currentSelectionItem);
+
   const { keycloak } = useKeycloak<KeycloakInstance>()
   const parsedToken: ParsedToken | undefined = keycloak?.tokenParsed
 
@@ -36,8 +46,19 @@ const IndexPage = () => {
         <p>You are: {loggedinState}</p>
         <p>{welcomeMessage}</p>
       </div>
-    </Layout>
+      <div className="container my-5">
+        <h1>Server Page</h1>
+
+        <div className="mb-1 lead text-muted">
+          Store state: {JSON.stringify(data)}
+        </div>
+        <br />
+        <Link href="/static">
+          <a className="text-dark">to static page</a>
+        </Link>
+      </div>
+    </Layout >
   )
 }
 
-export default IndexPage
+export default enhance(IndexPage);

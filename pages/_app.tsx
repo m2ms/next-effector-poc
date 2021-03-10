@@ -1,11 +1,13 @@
-import cookie from 'cookie';
 import { SSRCookies, SSRKeycloakProvider } from '@react-keycloak/ssr';
 import keycloakJSON from '../keycloak.json';
 
-import type { IncomingMessage } from 'http';
-import type { AppProps, AppContext } from 'next/app';
+import type { AppContext } from 'next/app';
+import App from "next/app";
 
-import { attachReducers } from '../state/reducer';
+import { withHydrate } from "effector-next";
+import { parseCookies } from "../utils/utils";
+
+const enhance = withHydrate();
 
 const keycloakCfg = {
   url: keycloakJSON['auth-server-url'],
@@ -13,32 +15,63 @@ const keycloakCfg = {
   clientId: keycloakJSON.resource,
 };
 
-interface InitialProps {
+/* interface InitialProps {
   cookies: unknown;
-}
+} */
 
-function MyApp({ Component, pageProps, cookies }: AppProps & InitialProps) {
-
-  attachReducers();
-
+/* const MyApp = ({ Component, pageProps, cookies }: AppProps & InitialProps) => {
   return (
     <SSRKeycloakProvider keycloakConfig={keycloakCfg} persistor={SSRCookies(cookies)}>
       <Component {...pageProps} />
     </SSRKeycloakProvider>
   );
 }
-
-function parseCookies(req?: IncomingMessage) {
+ */
+/* function parseCookies(req?: IncomingMessage) {
   if (!req || !req.headers) {
     return {};
   }
   return cookie.parse(req.headers.cookie || '');
-}
+} */
 
-MyApp.getInitialProps = async (context: AppContext) => {
+/* MyApp.getInitialProps = async (context: AppContext) => {
+
   // Extract cookies from AppContext
   return {
     cookies: parseCookies(context?.ctx?.req),
   };
-};
-export default MyApp;
+}; */
+
+function MyComponent({ children }: any) {
+  return <>{children}</>
+}
+
+class TestApp extends App {
+
+  static async getInitialProps(appContext: AppContext) {
+    const appProps = await App.getInitialProps(appContext);
+    const cookies = parseCookies(appContext?.ctx?.req);
+    appProps.pageProps.cookies = cookies;
+
+    console.log("appProps");
+    console.log(appProps);
+    return { ...appProps }
+  }
+
+  render() {
+
+    const { Component, pageProps } = this.props
+    const cookies = pageProps.cookies;
+    console.log("pageProps");
+    console.log(pageProps);
+
+
+    return <MyComponent>
+      <SSRKeycloakProvider keycloakConfig={keycloakCfg} persistor={SSRCookies(cookies)}>
+        <Component {...pageProps} />
+      </SSRKeycloakProvider>
+    </MyComponent>
+  }
+}
+
+export default enhance(TestApp);

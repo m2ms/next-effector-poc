@@ -1,8 +1,8 @@
 import React from 'react';
-import { SelectionItem } from '../model/selectionItem';
+import { SelectionItem } from '../models/selectionItem';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { deleteSelectedItem, saveCount, saveSeed, addSelectedIds, setGeneratedItems, setRestorePlot } from '../state/event';
+import { deleteSelectedItem, changeSeed, addSelectedIds, setGeneratedItems, setRestorePlot } from '../models';
 import { createStore } from "effector";
 import { restore } from "effector";
 
@@ -11,14 +11,12 @@ interface SelectionItemProps {
 }
 
 const restoreSelection = (state: SelectionItem) => {
-    const { count, seed, data } = restore(state);
+    const { seed, data } = restore(state);
 
-    let countValue = count.getState();
     let seedValue = seed.getState();
     let dataValue = data.getState();
 
-    saveCount(countValue);
-    saveSeed(seedValue);
+    changeSeed(seedValue);
     setGeneratedItems([]);
     setRestorePlot(true);
 
@@ -34,11 +32,11 @@ const deleteSelection = (name: number) => {
     deleteSelectedItem(name);
 }
 
-const SelectionView = ({ item = { count: 0, data: [], seed: "", timestamp: Date.now() } }: SelectionItemProps) => {
+const SelectionView = ({ item = { count: 0, data: [], seed: "", xaxisName: "", yaxisName: "", timestamp: Date.now() } }: SelectionItemProps) => {
     let name = item.timestamp;
     const currentSelectionItem = createStore(item, { name: name.toString() });
-    const itemCount = createStore(item.count, { name: name.toString() });
-    let itemState = currentSelectionItem.getState()
+    //const itemCount = createStore(item.count, { name: name.toString() });
+    let itemState = currentSelectionItem.getState();
 
     return (
         <>

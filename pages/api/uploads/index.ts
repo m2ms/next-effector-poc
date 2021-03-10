@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import fs from 'fs';
-import { ApiResponse } from '../../../model/apiResponse';
+import { ApiResponse } from '../../../models/apiResponse';
 
 type ResponseData = ApiResponse<string[], string>;
 
@@ -9,7 +9,7 @@ const outputFolderName = './public/uploads';
 
 const apiRoute = nextConnect({
 
-  onError(error, req: NextApiRequest, res: NextApiResponse<ResponseData>) {
+  onError(error, _: NextApiRequest, res: NextApiResponse<ResponseData>) {
     res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
   },
   onNoMatch(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
@@ -25,16 +25,16 @@ apiRoute.post((req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
   }
 
   let data = JSON.stringify( req.body, null, 2);
-  fs.writeFile(outputFolderName+'/state_'+req.body?.timestamp+'.json', data, function(){});
+  fs.writeFile(outputFolderName+'/state_'+req.body?.timestamp+'.json', data, function(){}); 
 
-  const filenames = fs.readdirSync(outputFolderName);
-  const images = filenames.map((name) => name);
-
-  res.status(200).json({ data: images, error: req.body});
+  res.status(200).json({ data: ["success"] });
 });
 
 apiRoute.get((_: NextApiRequest, res: NextApiResponse<ResponseData>) => {
-    res.json({ data : ["success"] });
+  const filenames = fs.readdirSync(outputFolderName);
+  const images = filenames.map((name) => name);
+  
+  res.json({ data : images });
 })
 
 export const config = {

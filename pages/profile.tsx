@@ -1,9 +1,10 @@
 import { useKeycloak } from '@react-keycloak/ssr'
 import type { KeycloakInstance, KeycloakTokenParsed } from 'keycloak-js'
-import type { NextPage } from 'next'
+import type { NextPage, NextPageContext } from 'next'
 import * as React from 'react'
 
 import { Layout } from '../components/Layout'
+import { parseCookies } from "../utils/utils";
 
 type ParsedToken = KeycloakTokenParsed & {
   email?: string
@@ -41,8 +42,8 @@ const ProfilePage: NextPage = () => {
       </li>
     </ul>
   ) : (
-    <span>Please login to view profile.</span>
-  )
+      <span>Please login to view profile.</span>
+    )
 
   return (
     <Layout title="Profile | Next.js + Keycloak Example">
@@ -51,5 +52,12 @@ const ProfilePage: NextPage = () => {
     </Layout>
   )
 }
+
+ProfilePage.getInitialProps = async (ctx: NextPageContext) => {
+  const cookies = parseCookies(ctx?.req);
+  return {
+    cookies: cookies
+  };
+};
 
 export default ProfilePage

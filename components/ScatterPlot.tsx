@@ -2,10 +2,10 @@ import React from 'react';
 import { Datum } from 'plotly.js';
 import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
-import { FieldMeta, GeneratedItem } from '../model/item';
+import { FieldMeta, GeneratedItem } from '../models/item';
 import { isNumber } from '../utils/utils';
-import { currentGeneratedItems, xaxisName, yaxisName, } from '../state/store';
-import { addSelectedIds } from '../state/event';
+import { $currentGeneratedItems, $xaxisName, $yaxisName, } from '../models/store';
+import { addSelectedIds } from '../models';
 import { useStore } from "effector-react";
 
 const Plot = createPlotlyComponent(Plotly);
@@ -58,32 +58,35 @@ const validateColours = (colouraxis: AxisSeries) => {
 };
 
 interface IProps {
-  width: number;
-  height: number;
+  //width: number;
+  //height: number;
 }
 
-const ScatterPlot = ({ width, height }: IProps) => {
-  const x = useStore(xaxisName);
-  const y = useStore(yaxisName);
-  const items = useStore(currentGeneratedItems);
+const ScatterPlot = ({ }: IProps) => {
+  const width: number = 700;
+  const height: number = 500;
+
+  const xaxisName = useStore($xaxisName);
+  const yaxisName = useStore($yaxisName);
+  const currentGeneratedItems = useStore($currentGeneratedItems);
   const selection: number[] = [];
 
   let fields: FieldMeta[] = [];
-  let xprop: string = x;
-  let yprop: string = y;
+  let xprop: string = xaxisName;
+  let yprop: string = yaxisName;
   let size: string = '500';
   let colour: string = 'blue';
 
-  const selectedPoints = [selection.map((id) => items.findIndex((m) => m.id === id))];
+  const selectedPoints = [selection.map((id) => currentGeneratedItems.findIndex((m) => m.id === id))];
 
-  const xaxis = getPropArrayFromMolecules(items, xprop);
-  const yaxis = getPropArrayFromMolecules(items, yprop);
+  const xaxis = getPropArrayFromMolecules(currentGeneratedItems, xprop);
+  const yaxis = getPropArrayFromMolecules(currentGeneratedItems, yprop);
 
-  const sizeaxis = getPropArrayFromMolecules(items, size);
-  const colouraxis = getPropArrayFromMolecules(items, colour);
+  const sizeaxis = getPropArrayFromMolecules(currentGeneratedItems, size);
+  const colouraxis = getPropArrayFromMolecules(currentGeneratedItems, colour);
 
-  const { sizes, ...sizeExtent } = scaleToSize(sizeaxis);
-  const { colours, ...colourExtent } = validateColours(colouraxis);
+  const { sizes } = scaleToSize(sizeaxis);
+  const { colours } = validateColours(colouraxis);
 
   const labelGetter = getPropDisplayName(fields);
   const xlabel = labelGetter(xprop);
@@ -99,7 +102,7 @@ const ScatterPlot = ({ width, height }: IProps) => {
           {
             x: xaxis,
             y: yaxis,
-            customdata: items.map((m) => m.id), // Add custom data for use in selection
+            customdata: currentGeneratedItems.map((m) => m.id), // Add custom data for use in selection
             selectedpoints: selectedPoints.length ? selectedPoints : null,
             type: 'scatter',
             mode: 'markers',

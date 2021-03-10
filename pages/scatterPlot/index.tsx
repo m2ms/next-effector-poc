@@ -1,24 +1,41 @@
-import type { NextPage } from 'next'
+import type { NextPage, NextPageContext } from 'next'
 import * as React from 'react'
 import seedrandom from 'seedrandom';
 import { Layout } from '../../components/Layout'
-import Scatterplot from '../../components/ScatterPlot'
 import Selection from '../../components/Selection'
 import { TextField, Button } from '@material-ui/core';
-import { GeneratedItem } from '../../model/item';
-import { setGeneratedItems, saveSeed, saveCount, reset, setRestorePlot } from '../../state/event';
-import { fromCount, selectedIds, seed, count, restorePlot } from '../../state/store';
-import { useStore } from "effector-react";
-import { useEffect } from 'react'
+import { GeneratedItem } from '../../models/item';
+import { pageLoaded, changeCount } from '../../models';
+import { setGeneratedItems, changeSeed, reset, setRestorePlot } from '../../models';
+import { $selectedIds, $seed, $count, $restorePlot } from '../../models/store';
+import { useStore, useEvent } from "effector-react";
+import { withStart } from "effector-next";
+import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { getInitFileRequest } from '../../domains/upload/upload.services';
+import { parseCookies } from "../../utils/utils";
 
-const ScatterPlotPage: NextPage = () => {
-    const startFrom = useStore(fromCount);
-    const ids = useStore(selectedIds);
-    const seedNumber = useStore(seed);
-    const countToGenerate = useStore(count);
-    const restoring = useStore(restorePlot);
+const enhance = withStart(pageLoaded);
 
-    let joinedIds = ids.join(", ");
+const DynamicComponentWithNoSSR = dynamic(
+    () => import('../../components/ScatterPlot'),
+    { ssr: false }
+)
+
+interface InitialProps {
+    data: number;
+}
+
+const ScatterPlotPage: NextPage<InitialProps> = ({ data }) => {
+    const selectedIds = useStore($selectedIds);
+    const seed = useStore($seed);
+    const count = useStore($count);
+    const restorePlot = useStore($restorePlot);
+    const startFrom = data;
+    const joinedIds = selectedIds.join(", ");
+
+    const handleChangeCount = useEvent(changeCount);
+    const handleChangeSeed = useEvent(changeSeed);
 
     const generateRows = (event: any) => {
         event.preventDefault();
@@ -27,21 +44,18 @@ const ScatterPlotPage: NextPage = () => {
 
     const generateItem = () => {
 
-        if (restoring === false) {
+        if (restorePlot === false) {
             reset();
         }
         setGeneratedItems([]);
 
-        const fromCount = startFrom;
-        const toCount = countToGenerate;
-
         let items: GeneratedItem[];
         let item: GeneratedItem;
-        let rng = seedrandom(seedNumber);
+        let rng = seedrandom(seed);
 
         items = [];
 
-        for (var i = fromCount; i < toCount; i++) {
+        for (var i = startFrom; i < count; i++) {
             let a = rng();
             let b = rng();
             let c = rng();
@@ -54,11 +68,11 @@ const ScatterPlotPage: NextPage = () => {
     }
 
     useEffect(() => {
-        if (restoring === true) {
+        if (restorePlot === true) {
             generateItem();
             setRestorePlot(false);
         }
-    }, [restoring])
+    }, [restorePlot])
 
     return (
         <Layout title="Scatter Plot | Next.js PoC">
@@ -66,11 +80,11 @@ const ScatterPlotPage: NextPage = () => {
                 <div className="d-flex flex-column justify-content-center ">
                     <div className="d-flex flex-column flex-md-row justify-content-center mb-5">
                         <form className="d-flex flex-column flex-md-row justify-content-center w-100" onSubmit={generateRows}>
-                            <TextField fullWidth={false} id="count" label="Count" variant="filled" required name="count" value={countToGenerate} className={"mr-1"}
-                                onChange={e => saveCount(parseInt(e.target.value))} />
+                            <TextField fullWidth={false} id="count" label="Count" variant="filled" required value={count} name="count" className={"mr-1"}
+                                onChange={e => handleChangeCount(parseInt(e.target.value))} />
 
-                            <TextField fullWidth={true} id="number" label="Seed" variant="filled" required name="number" value={seedNumber}
-                                onChange={e => saveSeed(e.target.value)} />
+                            <TextField fullWidth={true} id="number" label="Seed" variant="filled" required name="number" value={seed}
+                                onChange={e => handleChangeSeed(e.target.value)} />
 
                             <Button variant="contained" color="primary" className='ml-3 w-25' type="submit">
                                 Get Randn
@@ -78,7 +92,7 @@ const ScatterPlotPage: NextPage = () => {
                         </form>
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-center">
-                        <Scatterplot width={700} height={500} />
+                        <DynamicComponentWithNoSSR />
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-start mt-5">
                         <TextField fullWidth={true} id="selection" label="Selection" variant="filled" disabled rows={2} multiline={true} value={joinedIds} />
@@ -92,4 +106,13 @@ const ScatterPlotPage: NextPage = () => {
     )
 }
 
-export default ScatterPlotPage
+ScatterPlotPage.getInitialProps = async (ctx: NextPageContext) => {
+    const cookies = parseCookies(ctx?.req);
+    let responseData = await getInitFileRequest();
+    return {
+        data: responseData as number ?? 1,
+        cookies: cookies
+    };
+};
+
+export default enhance(ScatterPlotPage)
