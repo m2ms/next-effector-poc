@@ -92,7 +92,7 @@ const ScatterPlotPage: NextPage<InitialProps> = ({ data }) => {
                         </form>
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-center">
-                        <DynamicComponentWithNoSSR />
+                        <DynamicComponentWithNoSSR width={800} height={700} />
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-start mt-5">
                         <TextField fullWidth={true} id="selection" label="Selection" variant="filled" disabled rows={2} multiline={true} value={joinedIds} />
@@ -105,8 +105,8 @@ const ScatterPlotPage: NextPage<InitialProps> = ({ data }) => {
         </Layout >
     )
 }
-
 ScatterPlotPage.getInitialProps = async (ctx: NextPageContext) => {
+
     const cookies = parseCookies(ctx?.req);
     let responseData = await getInitFileRequest();
     return {

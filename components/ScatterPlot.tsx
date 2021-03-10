@@ -58,13 +58,11 @@ const validateColours = (colouraxis: AxisSeries) => {
 };
 
 interface IProps {
-  //width: number;
-  //height: number;
+  width: number;
+  height: number;
 }
 
-const ScatterPlot = ({ }: IProps) => {
-  const width: number = 700;
-  const height: number = 500;
+const ScatterPlot = ({ width, height }: IProps) => {
 
   const xaxisName = useStore($xaxisName);
   const yaxisName = useStore($yaxisName);

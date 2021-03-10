@@ -52,6 +52,7 @@ class TestApp extends App {
     const appProps = await App.getInitialProps(appContext);
     const cookies = parseCookies(appContext?.ctx?.req);
     appProps.pageProps.cookies = cookies;
+    appProps.pageProps.test = "test intial props";
 
     console.log("appProps");
     console.log(appProps);
@@ -59,12 +60,8 @@ class TestApp extends App {
   }
 
   render() {
-
     const { Component, pageProps } = this.props
     const cookies = pageProps.cookies;
-    console.log("pageProps");
-    console.log(pageProps);
-
 
     return <MyComponent>
       <SSRKeycloakProvider keycloakConfig={keycloakCfg} persistor={SSRCookies(cookies)}>

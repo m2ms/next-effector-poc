@@ -1,10 +1,9 @@
 import { useKeycloak } from '@react-keycloak/ssr'
 import type { KeycloakInstance, KeycloakTokenParsed } from 'keycloak-js'
-import type { NextPage, NextPageContext } from 'next'
+import type { NextPage } from 'next'
 import * as React from 'react'
 
 import { Layout } from '../components/Layout'
-import { parseCookies } from "../utils/utils";
 
 type ParsedToken = KeycloakTokenParsed & {
   email?: string
@@ -52,12 +51,5 @@ const ProfilePage: NextPage = () => {
     </Layout>
   )
 }
-
-ProfilePage.getInitialProps = async (ctx: NextPageContext) => {
-  const cookies = parseCookies(ctx?.req);
-  return {
-    cookies: cookies
-  };
-};
 
 export default ProfilePage

@@ -20,7 +20,11 @@ type ParsedToken = KeycloakTokenParsed & {
   family_name?: string
 }
 
-function IndexPage() {
+interface InitialProps {
+  test: string;
+}
+
+function IndexPage({ test }: InitialProps) {
   const data = useStore($currentSelectionItem);
 
   const { keycloak } = useKeycloak<KeycloakInstance>()
@@ -51,6 +55,10 @@ function IndexPage() {
 
         <div className="mb-1 lead text-muted">
           Store state: {JSON.stringify(data)}
+        </div>
+        <br />
+        <div className="mb-1 lead text-muted">
+          Props: {test}
         </div>
         <br />
         <Link href="/static">

@@ -4,7 +4,11 @@ import Link from "next/link";
 import { Layout } from '../components/Layout';
 import { $currentSelectionItem } from "../models/store";
 
-export default function StaticOptimizedPage() {
+interface InitialProps {
+    test: string;
+}
+
+export default function StaticOptimizedPage({ test }: InitialProps) {
     const data = useStore($currentSelectionItem);
 
     return (
@@ -15,6 +19,10 @@ export default function StaticOptimizedPage() {
                     <div className="mb-1 text-muted">
                         Store state: {JSON.stringify(data)}
                     </div>                    <br />
+                    <div className="mb-1 text-muted">
+                        Props: {test}
+                    </div>
+                    <br />
                     <Link href="/">
                         <a className="text-dark">to server page</a>
                     </Link>
@@ -22,4 +30,11 @@ export default function StaticOptimizedPage() {
             </div>
         </Layout>
     );
+}
+
+// it is necessary for static generation
+export async function getStaticProps() {
+    return {
+        props: { test: "test static props value" }
+    }
 }
