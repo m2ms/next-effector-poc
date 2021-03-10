@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next -p 3000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
+    "exp": "next export",
     "type-check": "tsc"
   },
   "dependencies": {
@@ -19,9 +20,11 @@
     "effector": "^21.8.4",
     "effector-next": "^1.2.0",
     "effector-react": "^21.2.1",
+    "keycloak-connect": "^12.0.4",
     "keycloak-js": "^11.0.2",
     "next": "latest",
     "next-connect": "^0.10.0",
+    "next-session": "^3.4.0",
     "plotly.js": "^1.58.4",
     "plotly.js-basic-dist": "^1.58.4",
     "react": "^16.12.0",

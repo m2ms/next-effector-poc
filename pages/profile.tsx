@@ -46,8 +46,11 @@ const ProfilePage: NextPage = () => {
 
   return (
     <Layout title="Profile | Next.js + Keycloak Example">
-      <h1 className="my-5">User Profile</h1>
-      {profile}
+      <div className="container my-5">
+
+        <h1 className="my-5">User Profile</h1>
+        {profile}
+      </div>
     </Layout>
   )
 }

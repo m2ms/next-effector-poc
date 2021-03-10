@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import fs from 'fs';
+//import { keycloak, sessionMiddleware } from '../../../domains/midlewares/index';
+import { keycloak } from '../../../domains/midlewares/index';
 
 const outputFolderName = './public/uploads';
 
@@ -15,12 +17,16 @@ const apiRoute = nextConnect({
   },
 });
 
-apiRoute.get((_: NextApiRequest, res: NextApiResponse) => {
-  let rawdata = fs.readFileSync(outputFolderName + '/state_init.json', '');
-  let initData = JSON.parse(rawdata);
+apiRoute
+  //.use(sessionMiddleware)
+  //.use('/', ...keycloak.middleware())
+  .use(keycloak.protect())
+  .get((_: NextApiRequest, res: NextApiResponse) => {
+    let rawdata = fs.readFileSync(outputFolderName + '/state_init.json', '');
+    let initData = JSON.parse(rawdata);
 
-  res.json({ data: initData });
-});
+    res.json({ data: initData });
+  });
 
 export const config = {
   api: {

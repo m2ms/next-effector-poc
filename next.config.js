@@ -8,9 +8,9 @@ const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = enhance({
   basePath: config.basePath,
-  assetPrefix: isProd ? config.assetsPrefix : '',
+  assetPrefix: config.basePath,
   serverRuntimeConfig: {
-    testConfig: 'testConfigValue',
+    testConfig: isProd ? 'testProdConfigValue' : 'testConfigValue',
   },
   publicRuntimeConfig: {
     staticFolder: '/staticFolder',

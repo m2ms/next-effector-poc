@@ -61,7 +61,7 @@ function IndexPage({ test }: InitialProps) {
           Props: {test}
         </div>
         <br />
-        <Link href="/static">
+        <Link href={"/static"}>
           <a className="text-dark">to static page</a>
         </Link>
       </div>

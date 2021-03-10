@@ -32,7 +32,7 @@ export default function StaticOptimizedPage({ test }: InitialProps) {
     );
 }
 
-// it is necessary for static generation
+// it is necessary for static generation (Automatic Static Optimization is disabled when App.getInitialProps is used)
 export async function getStaticProps() {
     return {
         props: { test: "test static props value" }

@@ -1,4 +1,3 @@
 {
-  "basePath": "/test-subroute",
-  "assetsPrefix": "/test-assets"   
+  "basePath": "/test-subroute"
 }

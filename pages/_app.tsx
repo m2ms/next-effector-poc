@@ -54,8 +54,7 @@ class TestApp extends App {
     appProps.pageProps.cookies = cookies;
     appProps.pageProps.test = "test intial props";
 
-    console.log("appProps");
-    console.log(appProps);
+    console.log("getInitialProps");
     return { ...appProps }
   }
 
