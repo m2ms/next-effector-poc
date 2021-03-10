@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+import type { NextPage, NextPageContext } from 'next'
 import * as React from 'react'
 import seedrandom from 'seedrandom';
 import { Layout } from '../../components/Layout'
@@ -9,7 +9,15 @@ import { GeneratedItem } from '../../model/item';
 import { setGeneratedItems, saveSeed, saveCount, reset, setRestorePlot } from '../../state/event';
 import { fromCount, selectedIds, seed, count, restorePlot } from '../../state/store';
 import { useStore } from "effector-react";
-import { useEffect } from 'react'
+import { useEffect } from 'react';
+import cookie from 'cookie';
+import type { IncomingMessage } from 'http';
+import dynamic from 'next/dynamic';
+
+const DynamicComponentWithNoSSR = dynamic(
+    () => import('../../components/ScatterPlot'),
+    { ssr: false }
+)
 
 const ScatterPlotPage: NextPage = () => {
     const startFrom = useStore(fromCount);
@@ -78,7 +86,7 @@ const ScatterPlotPage: NextPage = () => {
                         </form>
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-center">
-                        <Scatterplot width={700} height={500} />
+                        <DynamicComponentWithNoSSR width={700} height={500} />
                     </div>
                     <div className="d-flex flex-column flex-md-row justify-content-start mt-5">
                         <TextField fullWidth={true} id="selection" label="Selection" variant="filled" disabled rows={2} multiline={true} value={joinedIds} />
@@ -90,6 +98,23 @@ const ScatterPlotPage: NextPage = () => {
             </div>
         </Layout >
     )
+}
+
+ScatterPlotPage.getInitialProps = async (context: NextPageContext) => {
+    const cookies = parseCookies(context?.req);
+    console.log("cookies ScatterPlotPage");
+    console.log(cookies);
+    return {
+        cookies: cookies
+    };
+};
+
+
+function parseCookies(req?: IncomingMessage) {
+    if (!req || !req.headers) {
+        return {};
+    }
+    return cookie.parse(req.headers.cookie || '');
 }
 
 export default ScatterPlotPage

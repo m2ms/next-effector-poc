@@ -20,6 +20,8 @@ interface InitialProps {
 function MyApp({ Component, pageProps, cookies }: AppProps & InitialProps) {
 
   attachReducers();
+  console.log("cookies");
+  console.log(cookies);
 
   return (
     <SSRKeycloakProvider keycloakConfig={keycloakCfg} persistor={SSRCookies(cookies)}>

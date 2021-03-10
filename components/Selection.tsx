@@ -7,7 +7,7 @@ import { currentGeneratedItems, seed, xaxisName, yaxisName, count, selectedIds, 
 import { saveSelectedItem, } from '../state/event';
 import { SelectionItem } from '../model/selectionItem';
 
-const Selection: React.FC = (props) => {
+const Selection: React.FC = () => {
     const currentSeed = useStore(seed);
     const ids = useStore(selectedIds);
     const items = useStore(currentGeneratedItems);
@@ -35,7 +35,7 @@ const Selection: React.FC = (props) => {
                 <p>{'Restore a saved selection by clicking an option bellow'}</p>
             </div>
             <div className="d-flex pb-3">
-                <Button variant="contained" color="default" onClick={(e) => saveSelection()}>
+                <Button variant="contained" color="default" onClick={() => saveSelection()}>
                     Save selection
                 </Button>
             </div>

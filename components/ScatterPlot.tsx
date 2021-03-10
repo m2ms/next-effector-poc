@@ -62,7 +62,7 @@ interface IProps {
   height: number;
 }
 
-const ScatterPlot = ({ width, height }: IProps) => {
+const ScatterPlot = ({ width = 700, height = 800 }: IProps) => {
   const x = useStore(xaxisName);
   const y = useStore(yaxisName);
   const items = useStore(currentGeneratedItems);
