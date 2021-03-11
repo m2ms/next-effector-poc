@@ -2,21 +2,27 @@ import React from 'react';
 import { SelectionItem } from '../models/selectionItem';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { deleteSelectedItem, changeSeed, addSelectedIds, setGeneratedItems, setRestorePlot } from '../models';
+import { deleteSelectedItem, changeSeed, addSelectedIds, setGeneratedItems, setRestorePlot, changeCount } from '../models';
 import { createStore } from "effector";
 import { restore } from "effector";
+import { useEvent } from "effector-react";
 
 interface SelectionItemProps {
     item: SelectionItem,
 }
 
 const restoreSelection = (state: SelectionItem) => {
-    const { seed, data } = restore(state);
+    const handleChangeCount = useEvent(changeCount);
+    const handleChangeSeed = useEvent(changeSeed);
+
+    const { seed, data, count } = restore(state);
 
     let seedValue = seed.getState();
     let dataValue = data.getState();
+    let countValue = count.getState();
 
-    changeSeed(seedValue);
+    handleChangeCount(countValue);
+    handleChangeSeed(seedValue);
     setGeneratedItems([]);
     setRestorePlot(true);
 
