@@ -12,8 +12,6 @@ import { useStore, useEvent } from "effector-react";
 import { withStart } from "effector-next";
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-//import { getInitFileRequest } from '../../domains/upload/upload.services';
-//import { parseCookies } from "../../utils/utils";
 
 const enhance = withStart(pageLoaded);
 
@@ -105,11 +103,12 @@ const ScatterPlotPage: NextPage<InitialProps> = ({ data }) => {
         </Layout >
     )
 }
-ScatterPlotPage.getInitialProps = async (_: NextPageContext) => {
 
+ScatterPlotPage.getInitialProps = async (_: NextPageContext) => {
     //let responseData = await getInitFileRequest();
     return {
         data: 1,
+        //responseData: responseData
     };
 };
 

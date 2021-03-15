@@ -1,6 +1,7 @@
 import { createDomain } from 'effector-next';
 import { SelectionItem } from './selectionItem';
 import { GeneratedItem } from './item';
+import { ResponseDataFile } from './item';
 
 const initialState: SelectionItem = {
   timestamp: new Date().getTime(),
@@ -26,6 +27,10 @@ export const $count = selectionDomain.createStore(initialState.count);
 export const $seed = selectionDomain.createStore(initialState.seed);
 export const $xaxisName = selectionDomain.createStore(initialState.xaxisName);
 export const $yaxisName = selectionDomain.createStore(initialState.yaxisName);
+export const $file = selectionDomain.createStore<ResponseDataFile>({
+  data: 0,
+  message: 'init',
+});
 
 export const $currentGeneratedItems = generationDomain.createStore(
   new Array<GeneratedItem>()

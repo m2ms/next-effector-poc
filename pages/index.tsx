@@ -5,8 +5,11 @@ import React from "react";
 import Link from "next/link";
 import { useStore } from "effector-react";
 import { withStart } from "effector-next";
-import { pageLoaded } from "../models";
-import { $currentSelectionItem } from "../models/store";
+import { pageLoaded, changeFileCount } from "../models";
+import { $currentSelectionItem, $file } from "../models/store";
+import { getInitFileRequest } from '../domains/upload/upload.services';
+import { Button } from '@material-ui/core';
+import { useEvent } from "effector-react";
 
 const enhance = withStart(pageLoaded);
 
@@ -26,6 +29,8 @@ interface InitialProps {
 
 function IndexPage({ test }: InitialProps) {
   const data = useStore($currentSelectionItem);
+  const file = useStore($file);
+  const handleChangeFileCount = useEvent(changeFileCount);
 
   const { keycloak } = useKeycloak<KeycloakInstance>()
   const parsedToken: ParsedToken | undefined = keycloak?.tokenParsed
@@ -33,13 +38,21 @@ function IndexPage({ test }: InitialProps) {
   const loggedinState = keycloak?.authenticated ? (
     <span className="text-success">logged in</span>
   ) : (
-      <span className="text-danger">NOT logged in</span>
-    )
+    <span className="text-danger">NOT logged in</span>
+  )
 
   const welcomeMessage =
     keycloak?.authenticated || (keycloak && parsedToken)
       ? `Welcome back ${parsedToken?.preferred_username ?? ''}!`
       : 'Welcome visitor. Please login to continue.'
+
+  const getFile = async (token: string | undefined) => {
+    let responseData = await getInitFileRequest(token);
+
+    handleChangeFileCount(responseData);
+    console.log("responseData");
+    console.log(responseData);
+  }
 
   return (
     <Layout title="Home | Next.js PoC">
@@ -64,6 +77,17 @@ function IndexPage({ test }: InitialProps) {
         <Link href={"/static"}>
           <a className="text-dark">to static page</a>
         </Link>
+        <div>
+          <Button variant="contained" color="primary" className='mt-3' onClick={() => getFile(keycloak?.token)}>
+            Get File
+        </Button>
+          <div className="mb-1 lead text-muted">
+            File data: {file.data}
+          </div>
+          <div className="mb-1 lead text-muted">
+            File message: {file.message}
+          </div>
+        </div>
       </div>
     </Layout >
   )

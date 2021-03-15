@@ -8,13 +8,12 @@ export const Header: React.FC = () => {
   const { keycloak } = useKeycloak<KeycloakInstance>();
 
   const appState = keycloak?.authenticated ? (
-    <></>
-  ) : (
-    <>
-      <Star fontSize="small" />
+    <> <Star fontSize="small" />
       <Link href="/scatterPlot">
         <a className="my-0 mr-md-auto font-weight-bold text-dark">App</a>
-      </Link>
+      </Link></>
+  ) : (
+    <>
     </>
   );
 
@@ -25,7 +24,7 @@ export const Header: React.FC = () => {
         <a className="my-0 mr-md-5 font-weight-bold text-dark">Home</a>
       </Link>
       {appState}
-      <nav className="my-2 my-md-0 mr-md-3">
+      <nav className="my-2 my-md-0 mr-md-3 ml-md-auto">
         <Link href="/profile">
           <a className="p-2 text-dark">Profile</a>
         </Link>
@@ -57,7 +56,7 @@ export const Header: React.FC = () => {
           </button>
         </>
       ) : (
-        <>
+        <div className={''}>
           <button
             type="button"
             className="mx-2 btn btn-outline-primary"
@@ -81,7 +80,7 @@ export const Header: React.FC = () => {
           >
             Login
           </button>
-        </>
+        </div>
       )}
     </header>
   );

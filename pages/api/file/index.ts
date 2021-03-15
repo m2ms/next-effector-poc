@@ -19,13 +19,14 @@ const apiRoute = nextConnect({
 
 apiRoute
   //.use(sessionMiddleware)
-  //.use('/', ...keycloak.middleware())
+  .use('/', ...keycloak.middleware())
   .use(keycloak.protect())
   .get((_: NextApiRequest, res: NextApiResponse) => {
     let rawdata = fs.readFileSync(outputFolderName + '/state_init.json', '');
     let initData = JSON.parse(rawdata);
+    //var token = req.headers['authorization'];
 
-    res.json({ data: initData });
+    res.status(200).json({ data: initData });
   });
 
 export const config = {

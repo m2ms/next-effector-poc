@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { ApiResponse } from '../../models/apiResponse';
 import { SelectionItem } from '../../models/selectionItem';
+import { ResponseDataFile } from '../../models/item';
 import getConfig from 'next/config';
 
 const { /* serverRuntimeConfig, */ publicRuntimeConfig } = getConfig();
@@ -41,18 +42,36 @@ export const getFileRequest = async (
 };
 
 export const getInitFileRequest = async (
+  token: string | undefined,
   progressCallback?: (progressEvent: ProgressEvent) => void
-): Promise<unknown> => {
+): Promise<ResponseDataFile> => {
   const config: AxiosRequestConfig = {
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'content-type': 'application/json',
+      Authorization: 'bearer ' + token,
+    },
     onUploadProgress: progressCallback,
     validateStatus: () => true,
   };
 
   console.log(publicRuntimeConfig);
-  const response = await axios.get(
-    publicRuntimeConfig.basePath + '/api/file',
-    config
-  );
-  return response.data;
+  const response = await axios
+    .get(publicRuntimeConfig.basePath + '/api/file', config)
+    .then((response) => {
+      let dataFile: ResponseDataFile = {
+        data: response.data.data.count,
+        message: 'success',
+      };
+      return dataFile;
+    })
+    .catch((error) => {
+      let dataFile: ResponseDataFile = {
+        data: -1,
+        message: 'error ' + error,
+      };
+
+      return dataFile;
+    });
+
+  return response;
 };

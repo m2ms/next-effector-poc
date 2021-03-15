@@ -1,6 +1,6 @@
 import { forward, createEvent, createEffect, PageContext } from 'effector-next';
 import { SelectionItem } from '../models/selectionItem';
-import { GeneratedItem } from '../models/item';
+import { GeneratedItem, ResponseDataFile } from '../models/item';
 import {
   $count,
   $currentSelectionItem,
@@ -9,9 +9,11 @@ import {
   $selectedIds,
   $restorePlot,
   $seed,
+  $file,
 } from './store';
 
 export const pageLoaded = createEvent<PageContext>();
+export const changeFileCount = createEvent<ResponseDataFile>();
 export const changeCount = createEvent<number>();
 export const changeSeed = createEvent<string>();
 export const setGeneratedItems = createEvent<GeneratedItem[]>();
@@ -37,9 +39,16 @@ const effect = createEffect({
   },
 });
 
+const effectFile = createEffect({
+  handler(value: ResponseDataFile) {
+    return Promise.resolve({ value });
+  },
+});
+
 $currentSelectionItem.on(effect.done, (_, { result }) => result.value);
 $count.on(effect.done, (_, { result }) => result.value.count);
 $seed.on(effect.done, (_, { result }) => result.value.seed);
+$file.on(effectFile.done, (_, { result }) => result.value);
 
 forward({
   from: pageLoaded.map(() => initialServerState),
@@ -62,6 +71,11 @@ forward({
     return currentItem;
   }),
   to: effect,
+});
+
+forward({
+  from: changeFileCount.map((i) => i),
+  to: effectFile,
 });
 
 $currentGeneratedItems

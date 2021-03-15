@@ -4,7 +4,7 @@ export interface Field {
 }
 
 export interface GeneratedItem {
-  id: number,
+  id: number;
   fields: Field[];
 }
 
@@ -12,4 +12,9 @@ export interface FieldMeta {
   name: string;
   nickname: string;
   enabled: boolean;
+}
+
+export interface ResponseDataFile {
+  data: number;
+  message: string;
 }
