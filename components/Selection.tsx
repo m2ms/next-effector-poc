@@ -32,8 +32,6 @@ const Selection = () => {
         let selectionItem: SelectionItem = { timestamp: timestamp, seed: seed, count: count, xaxisName: xaxisName, yaxisName: yaxisName, data: newItemsToSave, };
         addSelectedItem(selectionItem);
 
-        console.log("token");
-        console.log(token);
         const response = await uploadFileRequest(selectionItem, token);
         console.log(response);
     }

@@ -20,7 +20,6 @@ const apiRoute = nextConnect({
 
 apiRoute.post((req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
   var dir = outputFolderName;
-  var token = req.headers['authorization'];
 
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -33,7 +32,7 @@ apiRoute.post((req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
     function () {}
   );
 
-  res.status(200).json({ data: token });
+  res.status(200).json({ data: 'success' });
 });
 
 apiRoute.get((_: NextApiRequest, res: NextApiResponse<ResponseData>) => {
